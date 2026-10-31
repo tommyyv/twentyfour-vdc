@@ -1,6 +1,15 @@
+# env
 .venv/
-venv/
-.env
-env
+.env/
 
-__pycache__
+# dev
+.tools/
+
+# cache
+.cache/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+
+# releases
+dist/
