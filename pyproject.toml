@@ -1,0 +1,15 @@
+[project]
+name = "24vdc"
+version = "0.1.0"
+description = "bios firmware updater and configurer"
+readme = "README.md"
+authors = [{ name = "capy" }]
+requires-python = ">=3.15"
+dependencies = []
+
+[project.scripts]
+24vdc = "24vdc:main"
+
+[build-system]
+requires = ["uv_build>=0.13.6,<0.14.0"]
+build-backend = "uv_build"
