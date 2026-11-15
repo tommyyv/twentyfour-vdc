@@ -1,17 +1,21 @@
 # Software Design & Architecture: Centralized BIOS & Firmware Orchestration System
+
 This project automates the preparation phase of bare-metal hardware systems by orchestrating BIOS firmware
 updates and configurations using a centralized web dashboard; dedicated repositories are managed and maintained and
 distributed from the server.
 
 ## Infrastructure
+
 Uses a centralized server-client architecture. Server manages state and orchestration. Headless clients request and
-receive responses (payloads, state, etc).
+receive responses (payloads, state, etc). This is a 3-stage development: local, air-gapped host, container within the
+air-gapped host
 
 - Server: bare-metal running Windows Server 2022
 - Services: DHCP, DNS, WDS, WSL running Ubuntu
 - Containerization (within WSL): Docker
 
 ## Technology Stack
+
 - Reverse Proxy & Static File Server: Caddy
 - Frontend (single page application): Python (FastAPI), Jinja2, HTMX. Server-side rendered HTML templates/pages using
 Jinja2. Dynamic handlers/updates (button clicks, etc) using HTMX.
@@ -20,6 +24,7 @@ Jinja2. Dynamic handlers/updates (button clicks, etc) using HTMX.
 - Client-side: PowerShell; WinPE (PXE boot via WDS); non-persistent (RAM only)
 
 ## Workflow
+
 State-driven pipeline. Clients are non-persistent (no local state). Server-side state machine and database integration
 are the source of truth.
 
@@ -30,6 +35,7 @@ database.
 server.
 
 Use case 1: Client needs a BIOS firmware update and configuration
+
 1. Client connects and boots WinPE via PXE boot. PowerShell startup script executes.
 2. Checks-in and polling for instructions. (GET /api/v1/clients/{serial-tag}/action)
 3. Phase 1 (Firmware Check/Flash): Task assigned the 'full payload task' to a client. Submits the request. The server
@@ -42,6 +48,7 @@ configuration payload (served by Caddy). Client reports an 'in-progress' state t
 executes the BIOS configuration. Client reports a 'completed' state to the server. Reboots.
 
 ## Bottlenecks -> Mitigations
+
 - Concurrent database read/writes assisted by asynchronous database driver (asyncpg) to limit write-locks and
 continuous connection hits.
 - Payloads are served by Caddy, redirecting the requests to a dedicated route. Includes BIOS firmware binaries and BIOS
@@ -50,6 +57,7 @@ configurations. Limits API traffic to the backend (FastAPI).
 - PXE boot storms can be reduced and desaturated by staggering client power-ons
 
 ## Air-gapped Deployment
+
 Preparing and packaging development environment for isolated, air-gapped production environment.
 
 1. Build & tag Docker images, tagging the release version (e.g., 'backend:v0.1.0')
