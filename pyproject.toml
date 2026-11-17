@@ -3,7 +3,7 @@ requires = ["uv_build>=0.13.6,<0.14.0"]
 build-backend = "uv_build"
 
 [project]
-name = "24vdc"
+name = "twentyfour-vdc"
 version = "0.1.0"
 authors = [{ name = "capy" }]
 description = "bios firmware updater and configurer"
@@ -13,20 +13,17 @@ license-files = ["UNLICENSE"]
 
 requires-python = ">=3.15"
 dependencies = [
-  "fastapi",
-  "uvicorn[standard]",
+  "fastapi[standard]",
   "sqlalchemy[asyncio]",
   "asyncpg",
   "alembic",
   "pydantic",
   "pydantic-settings",
   "pydantic-extra-types",
-  "jinja2",
-  "python-multipart",
 ]
 
 [dependency-groups]
-dev = ["basedpyright", "ruff", "pytest", "pytest-cov", "httpx"]
+dev = ["basedpyright", "ruff", "pytest", "pytest-cov"]
 
-[project.scripts]
-24vdc = "24vdc:main"
+[tool.fastapi]
+entrypoint = "twentyfour_vdc.main:app"
