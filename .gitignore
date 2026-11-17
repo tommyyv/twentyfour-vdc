@@ -3,7 +3,7 @@
 .env/
 
 # dev
-.tools/
+TODO.md
 
 # cache
 .cache/
